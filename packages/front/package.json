@@ -1,0 +1,24 @@
+{
+  "name": "front",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon `which http-server`",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "nodemon": "^2.0.20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/rems2rems/texasholdeme5.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/rems2rems/texasholdeme5/issues"
+  },
+  "homepage": "https://gitlab.com/rems2rems/texasholdeme5#readme",
+  "description": ""
+}

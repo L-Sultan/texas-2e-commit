@@ -1,0 +1,6 @@
+node_modules
+packages/back/node_modules
+packages/back/.env
+packages/front/node_modules
+packages/front/.env
+packages/shared/node_modules

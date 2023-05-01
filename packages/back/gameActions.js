@@ -75,9 +75,10 @@ function dealFlop(game) {
 }
 
 function dealTurn(game){
-    let turn = [game.deck.pop()];
-    game.turn = turn;
+    let turn = game.deck.pop();
+    game.flop.push(turn);
 }
+
 
 
 function dealRiver(game){
@@ -89,6 +90,10 @@ function playRound(game) {
     console.log("Play round...");
     dealAllPocketCards(game);
 
+    // Deal the turn card
+    dealTurn(game);
+    broadcast(game, "turn", game.flop[3]);
+
     // First betting round
     startBettingRound(game);
     while (!roundIsOver(game)) {
@@ -98,20 +103,7 @@ function playRound(game) {
         // ...
     }
 
-    // Deal the turn card
-    dealTurn(game);
-
-    // Second betting round
-    startBettingRound(game);
-    while (!roundIsOver(game)) {
-        let player = game.currentPlayer;
-        player.socket.emit("turn", { currentPlayer: player.seat });
-        // Wait for player to make a move
-        // ...
-    }
-
-    // ... continue with river and showdown
-    dealRiver(game)
+    // ... continue with second betting round, river, and showdown
 }
 
 

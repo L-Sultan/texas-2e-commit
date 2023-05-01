@@ -184,18 +184,23 @@ class PokerTable extends Phaser.Scene {
                 let card3 = this.createCard(flop[2], scale)
                 this.flop[2].cardsSprite = card3
                 this.dealCard(card3, this.flop[2].x, this.flop[2].y, () => {
-
-                    let card4 = this.createCard(flop[3], scale)
-                    this.flop[3].cardsSprite = card4
-                    this.dealCard(card4, this.flop[3].x, this.flop[3].y, () => {
-
-                        let card5 = this.createCard(flop[4], scale)
-                        this.flop[4].cardsSprite = card5
-                        this.dealCard(card5, this.flop[5].x, this.flop[5].y)
-                    })
                 })
             })
         })
+    }
+
+    dealTurn(flop) {
+        let scale = cardParams.opponentScale
+        let card4 = this.createCard(flop[3], scale)
+                    this.flop[3].cardsSprite = card4
+                    this.dealCard(card4, this.flop[3].x, this.flop[3].y)       
+    }
+
+    dealRiver(flop) {
+        let scale = cardParams.opponentScale
+        let card5 = this.createCard(flop[4], scale)
+                    this.flop[4].cardsSprite = card5
+                    this.dealCard(card5, this.flop[4].x, this.flop[4].y)       
     }
 
     foldCards(seat) {

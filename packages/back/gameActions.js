@@ -20,14 +20,6 @@ const listFreeSeats = (seats) => {
     return freeSeats
 }
 
-// const addNewPlayer = (game, newPlayer) => {
-//     // console.log(newPlayer);
-//     console.log("player", newPlayer.name, "ready");
-//     game.players.push(newPlayer)
-//     // freeSeats.splice(freeSeats.indexOf(newPlayer.seat),1)
-//     console.log("players", game.players);
-// }
-
 
 function removePlayer(game, seat) {
     game.players.find((p)=>p.seat===seat).cards = null;
@@ -55,17 +47,21 @@ function startGame(game) {
 
 function dealAllPocketCards(game) {
     for (let player of game.players) {
-        // if (player != undefined) {
         console.log("deal", player.name);
         dealFlop(game)
-        broadcast(game, "flop",game.flop);
+        broadcast(game, "flop", game.flop);
 
-            dealPocketCards(game, player);
-            player.socket.emit("deal", { seat: player.seat, cards: player.cards });
-            broadcast(game, "deal", { seat: player.seat }, player.seat);
-        // }
+        // Deal pocket cards
+        dealPocketCards(game, player);
+        player.socket.emit("deal", { seat: player.seat, cards: player.cards });
+        broadcast(game, "deal", { seat: player.seat }, player.seat);
     }
+
+    // Deal turn
+    dealTurn(game);
+    broadcast(game, "turn", game.turn);
 }
+
 
 
 
@@ -83,9 +79,39 @@ function dealTurn(game){
     game.turn = turn;
 }
 
+
 function dealRiver(game){
     let river = [game.deck.pop()];
     game.river = river;
+}
+
+function playRound(game) {
+    console.log("Play round...");
+    dealAllPocketCards(game);
+
+    // First betting round
+    startBettingRound(game);
+    while (!roundIsOver(game)) {
+        let player = game.currentPlayer;
+        player.socket.emit("turn", { currentPlayer: player.seat });
+        // Wait for player to make a move
+        // ...
+    }
+
+    // Deal the turn card
+    dealTurn(game);
+
+    // Second betting round
+    startBettingRound(game);
+    while (!roundIsOver(game)) {
+        let player = game.currentPlayer;
+        player.socket.emit("turn", { currentPlayer: player.seat });
+        // Wait for player to make a move
+        // ...
+    }
+
+    // ... continue with river and showdown
+    dealRiver(game)
 }
 
 
@@ -105,4 +131,4 @@ function roundIsOver(game) {
     return bets.every((b) => b === max)
 }
 
-export { createGame, listFreeSeats, removePlayer, updateStack, startGame, broadcast, dealAllPocketCards, getNextPlayer, roundIsOver, dealTurn, dealRiver }
+export { createGame, listFreeSeats, removePlayer, updateStack, startGame, broadcast, dealAllPocketCards, getNextPlayer, roundIsOver, dealTurn, dealRiver, playRound }

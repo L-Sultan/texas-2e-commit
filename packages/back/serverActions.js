@@ -14,15 +14,12 @@ let onConnect = (socket) => {
     socket.emit("listSeats", freeSeats)
   })
   socket.on("join", (newPlayer) => {
-    // console.log(newPlayer);
     console.log("player", newPlayer.name, "ready");
     newPlayer.socket = socket
     newPlayer.bet = 0
     socket.player = newPlayer
     seats[newPlayer.seat - 1] = newPlayer
-    // addNewPlayer(game,newPlayer)
 
-    // console.log("game", game, game.players.length);
     const readyPlayers = seats.filter((s) => s != undefined)
     if (readyPlayers.length > 1) {
       if (!game || !game.started) {
@@ -48,7 +45,6 @@ let onConnect = (socket) => {
     console.log(game.currentPlayer.stack);
     socket.emit("unactive")
     broadcast(game, "bet", { seat, amount, stack: game.currentPlayer.stack, bet: game.currentPlayer.bet })
-    // game.currentPlayer.bet += amount
     if (roundIsOver(game)) {
       console.log("find winner");
       broadcast(game,"game-over")
@@ -60,15 +56,6 @@ let onConnect = (socket) => {
         game.pot += player.bet
         player.bet = 0
       }
-      // let bestHand = findBestHand(game.players.map((p) => p.hand))
-      // console.log("best",bestHand);
-      // let winners = game.players.filter((p)=>compareHands(p.hand,bestHand)===0)
-      // console.log("winners", winners);
-      // for (let winner of winners) {
-      //   winner.stack += game.pot/winners.length
-      // }
-      // broadcast(game, "winners", winners.map((w) => { return { hand:w.hand,seat: w.seat, prize: game.pot / winners.length, stack: w.stack } }))
-      // return
     }
 
     game.currentPlayer = getNextPlayer(game)
@@ -76,13 +63,6 @@ let onConnect = (socket) => {
     game.currentPlayer.socket.emit("active")
 
   })
-  // if(roundIsOver(game)){
-  //   console.log("flop fini")
-  //   dealTurn(game)
-  //   broadcast(game, "cardTurn", game.cardTurn);
-  //   game.currentPlayer.socket.emit("active");
-  //   return;
-  // }
   
   socket.on("show", (seat) => {
     console.log("show!",seat);
